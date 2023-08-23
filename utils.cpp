@@ -1,4 +1,4 @@
-#include "quadratic.h"
+#include "utils.h"
 #include <cstdio>
 #include <cmath>
 
@@ -14,7 +14,7 @@ bool is_zero(double a)
 }
 
 void clean_buffer() {
-    int ch;
+    int ch = 0;
     while ((ch = getchar()) != '\n') 
         { }
 }

@@ -1,7 +1,7 @@
 #include "utils.h"
-#include "io.h"
 #include "solver.h"
-#include "tests.h"
+#include "quadratic.h"
+#include "io.h"
 
 enum RootsNum {
     ZERO_ROOTS,

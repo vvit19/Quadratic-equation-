@@ -1,4 +1,4 @@
-#include "quadratic.h"
+#include "tests.h"
 #include <cstdio>
 #include <cmath>
 #include <cassert>
@@ -48,14 +48,7 @@ bool test_solve_quadratic(double a, double b, double c, double x1_expected,
     double x2 = 0;
     RootsNum roots = solve_quadratic(a, b, c, &x1, &x2);
 
-    if (are_roots_equal(x1, x2, x1_expected, x2_expected) && roots == roots_expected)    
-    { 
-        printf("All right\n"); 
-        return true;
-    }
-
-    check_test_fail(x1, x2, x1_expected, x2_expected, roots, roots_expected);
-    return false;
+    return is_test_correct(x1, x1_expected, x2, x2_expected, roots, roots_expected);
 }
 
 void run_test(struct UnitTest* test, int* counter_tests, int* counter_passed_tests) 
@@ -95,4 +88,19 @@ bool are_roots_equal(double x1, double x2, double x1_expected, double x2_expecte
 {
     return ((is_equal(x1, x1_expected) && is_equal(x2, x2_expected)) || 
             (is_equal(x2, x1_expected) && is_equal(x1, x2_expected)));
+}
+
+bool is_test_correct(double x1, double x1_expected, double x2, double x2_expected, 
+                     RootsNum roots, RootsNum roots_expected)
+{
+    if (are_roots_equal(x1, x1_expected, x2, x2_expected) && roots == roots_expected)
+    {
+        printf("All right\n");
+        return true;
+    }
+    else 
+    {
+        check_test_fail(x1, x2, x1_expected, x2_expected, roots, roots_expected);
+        return false;
+    }
 }

@@ -1,4 +1,4 @@
-#include "quadratic.h"
+#include "solver.h"
 #include <cstdio>
 #include <cmath>
 #include <cassert>
