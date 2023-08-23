@@ -5,18 +5,25 @@
 
 void read_coeff(double* coeff, char ch) 
 {
+    bool enter_cycle = false;
     assert(coeff);
     printf("%c = ", ch);
-    while (scanf("%lf", coeff) != 1) 
+    while (enter_cycle != true) 
     {
-        printf("Incorrect input! Input number once again!\n");
-        clean_buffer();
-        printf("%c = ", ch);
-    }
-    if (!isfinite(*coeff)) 
-    {
-        printf("Very big coefficient! Input it once again\n");
-        read_coeff(coeff, ch);
+        if (scanf("%lf", coeff) != 1) 
+        {
+            printf("Incorrect input! Input number once again!\n");
+            clean_buffer();
+            printf("%c = ", ch);
+            continue;
+        }
+        if (!isfinite(*coeff))
+        {
+            printf("Very big coefficient! Input it once again\n");
+            read_coeff(coeff, ch);
+            continue;
+        }
+        enter_cycle = true;
     }
 }
 
