@@ -1,14 +1,16 @@
 #include "quadratic.h"
-#include <stdio.h>
-#include <math.h>
-#include <assert.h>
+#include <cstdio>
+#include <cmath>
+#include <cassert>
 
 void read_coeff(double* coeff, char ch) 
 {
-    bool enter_cycle = false;
     assert(coeff);
+
+    bool correct_input = false;
     printf("%c = ", ch);
-    while (enter_cycle != true) 
+
+    while (correct_input != true) 
     {
         if (scanf("%lf", coeff) != 1) 
         {
@@ -17,19 +19,20 @@ void read_coeff(double* coeff, char ch)
             printf("%c = ", ch);
             continue;
         }
-        if (!isfinite(*coeff))
+
+        if (!std::isfinite(*coeff))
         {
             printf("Very big coefficient! Input it once again\n");
-            read_coeff(coeff, ch);
             continue;
         }
-        enter_cycle = true;
+
+        correct_input = true;
     }
 }
 
-void output_solutions(nRoots nroots, double x_1, double x_2) {
+void output_solutions(RootsNum Nroots, double x_1, double x_2) {
     
-    switch (nroots)
+    switch (Nroots)
     {
     case ZERO_ROOTS:
         printf("no real solutions\n");
@@ -38,7 +41,9 @@ void output_solutions(nRoots nroots, double x_1, double x_2) {
         printf("x = %.3f\n", x_1);
         break;
     case TWO_ROOTS:
-        printf("x_1 = %.3f\nx_2 = %.3f\n", x_1, x_2);
+        printf("x_1 = %.3f\n"
+               "x_2 = %.3f\n", 
+               x_1, x_2);
         break;
     case INF_ROOTS:
         printf("(-oo, +oo)\n");

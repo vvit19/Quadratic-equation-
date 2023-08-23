@@ -1,7 +1,7 @@
 #include "quadratic.h"
-#include <stdio.h>
-#include <math.h>
-#include <assert.h>
+#include <cstdio>
+#include <cmath>
+#include <cassert>
 
 int main() 
 {
@@ -18,7 +18,7 @@ int main()
     read_coeff(&b, 'b');
     read_coeff(&c, 'c');
 
-    nRoots solve = solve_quadratic(a, b, c, &x_1, &x_2);
+    RootsNum solve = solve_quadratic(a, b, c, &x_1, &x_2);
     output_solutions(solve, x_1, x_2);
     
     return 0;

@@ -1,9 +1,9 @@
 #include "quadratic.h"
-#include <stdio.h>
-#include <math.h>
-#include <assert.h>
+#include <cstdio>
+#include <cmath>
+#include <cassert>
 
-nRoots solve_quadratic(double a, double b, double c, double* x_1, double* x_2) 
+RootsNum solve_quadratic(double a, double b, double c, double* x_1, double* x_2) 
 {
     assert(x_1);
     assert(x_2);
@@ -31,7 +31,7 @@ nRoots solve_quadratic(double a, double b, double c, double* x_1, double* x_2)
     return TWO_ROOTS;
 }
 
-nRoots solve_linear(double a, double b, double* x_1) 
+RootsNum solve_linear(double a, double b, double* x_1) 
 { 
     assert(x_1);
 
@@ -43,6 +43,7 @@ nRoots solve_linear(double a, double b, double* x_1)
         }
         return ZERO_ROOTS;
     }
+
     *x_1 = - b / a;
     return ONE_ROOT;
 }

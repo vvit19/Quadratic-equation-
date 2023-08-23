@@ -1,15 +1,16 @@
 #include "quadratic.h"
-#include <stdio.h>
-#include <math.h>
+#include <cstdio>
+#include <cmath>
 
 bool is_equal(double a, double b) 
 {
+    const double EPS = 1e-10;
     return fabs(a - b) < EPS;
 }
 
 bool is_zero(double a)
 {
-    return fabs(a - 0) < EPS;
+    return is_equal(a, 0);
 }
 
 void clean_buffer() {
