@@ -13,16 +13,16 @@ void run_all_tests()
     double x2;
     nRoots res;
     } tests[] = {
-    {0,  0,  0, 0, 0, INF_ROOTS},
-    {0,  0,  5, 0, 0, ZERO_ROOTS},
-    {0,  3,  0, 0, 0, ONE_ROOT},
-    {0,  2, -4, 2, 0, ONE_ROOT},
-    {1,  4,  4, -2, 0, ONE_ROOT},
-    {1, -5,  6, 3, 2, TWO_ROOTS},
-    {1,  1,  1, 0, 0, ZERO_ROOTS},
-    {0,  1, -3, 3, 0, ONE_ROOT},
-    {1,  5,  0, 0, -5, TWO_ROOTS},
-    {1, -4,  3, 3, 1, TWO_ROOTS}
+    {0,  0,  0,  0,  0, INF_ROOTS},
+    {0,  0,  5,  0,  0, ZERO_ROOTS},
+    {0,  3,  0,  0,  0, ONE_ROOT},
+    {0,  2, -4,  2,  0, ONE_ROOT},
+    {1,  4,  4, -2,  0, ONE_ROOT},
+    {1, -5,  6,  3,  2, TWO_ROOTS},
+    {1,  1,  1,  0,  0, ZERO_ROOTS},
+    {0,  1, -3,  3,  0, ONE_ROOT},
+    {1,  5,  0,  0, -5, TWO_ROOTS},
+    {1, -4,  3,  3,  1, TWO_ROOTS}
     };
 
     const int UNIT_TESTS_NUM = (sizeof (tests)) / (sizeof (UnitTest));

@@ -28,6 +28,7 @@ void read_coeff(double* coeff, char ch)
 }
 
 void output_solutions(nRoots nroots, double x_1, double x_2) {
+    
     switch (nroots)
     {
     case ZERO_ROOTS:
