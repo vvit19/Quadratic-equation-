@@ -1,4 +1,6 @@
 #include "io.h"
+#include "utils.h"
+#include "quadratic.h"
 #include <cstdio>
 #include <cmath>
 #include <cassert>

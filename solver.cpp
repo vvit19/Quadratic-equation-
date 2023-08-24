@@ -1,4 +1,6 @@
 #include "solver.h"
+#include "quadratic.h"
+#include "utils.h"
 #include <cstdio>
 #include <cmath>
 #include <cassert>

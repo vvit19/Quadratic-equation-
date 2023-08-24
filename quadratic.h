@@ -1,7 +1,5 @@
-#include "utils.h"
-#include "solver.h"
-#include "quadratic.h"
-#include "io.h"
+#ifndef QUADRATIC_H_
+#define QUADRATIC_H_
 
 enum RootsNum {
     ZERO_ROOTS,
@@ -10,5 +8,6 @@ enum RootsNum {
     INF_ROOTS
 }; 
 
+#endif
 
 

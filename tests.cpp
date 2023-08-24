@@ -1,16 +1,10 @@
 #include "tests.h"
+#include "quadratic.h"
+#include "solver.h"
+#include "utils.h"
 #include <cstdio>
 #include <cmath>
 #include <cassert>
-
-struct UnitTest {
-    double a;
-    double b;
-    double c;
-    double x1;
-    double x2;
-    RootsNum roots;
-    };
 
 void run_all_tests() 
 {
@@ -42,17 +36,9 @@ void run_all_tests()
     printf("Passed tests: %d\n", passed_tests);
 }
 
-bool test_solve_quadratic(double a, double b, double c, double x1_expected,
-                          double x2_expected, RootsNum roots_expected) {
-    double x1 = 0;
-    double x2 = 0;
-    RootsNum roots = solve_quadratic(a, b, c, &x1, &x2);
-
-    return is_test_correct(x1, x1_expected, x2, x2_expected, roots, roots_expected);
-}
-
 void run_test(struct UnitTest* test, int* counter_tests, int* counter_passed_tests) 
 {
+    assert(test);
     assert(counter_tests);
     assert(counter_passed_tests);
 
@@ -63,6 +49,28 @@ void run_test(struct UnitTest* test, int* counter_tests, int* counter_passed_tes
     { 
         *counter_passed_tests += 1; 
     }
+}
+
+bool test_solve_quadratic(double a, double b, double c, double x1_expected,
+                          double x2_expected, RootsNum roots_expected) {
+    double x1 = 0;
+    double x2 = 0;
+    RootsNum roots = solve_quadratic(a, b, c, &x1, &x2);
+
+    return is_test_correct(x1, x1_expected, x2, x2_expected, roots, roots_expected);
+}
+
+bool is_test_correct(double x1, double x1_expected, double x2, double x2_expected, 
+                     RootsNum roots, RootsNum roots_expected)
+{
+    if (are_roots_equal(x1, x2, x1_expected, x2_expected) && roots == roots_expected)
+    {
+        printf("All right\n");
+        return true;
+    }
+    printf("wtf\n");
+    check_test_fail(x1, x2, x1_expected, x2_expected, roots, roots_expected);
+    return false;
 }
 
 void check_test_fail(double x1, double x2, double x1_expected, double x2_expected, 
@@ -88,19 +96,4 @@ bool are_roots_equal(double x1, double x2, double x1_expected, double x2_expecte
 {
     return ((is_equal(x1, x1_expected) && is_equal(x2, x2_expected)) || 
             (is_equal(x2, x1_expected) && is_equal(x1, x2_expected)));
-}
-
-bool is_test_correct(double x1, double x1_expected, double x2, double x2_expected, 
-                     RootsNum roots, RootsNum roots_expected)
-{
-    if (are_roots_equal(x1, x1_expected, x2, x2_expected) && roots == roots_expected)
-    {
-        printf("All right\n");
-        return true;
-    }
-    else 
-    {
-        check_test_fail(x1, x2, x1_expected, x2_expected, roots, roots_expected);
-        return false;
-    }
 }
