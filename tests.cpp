@@ -32,8 +32,8 @@ void run_all_tests()
         run_test(test, &counter_tests, &passed_tests);
     }
 
-    printf("Tests: %d\n", counter_tests);
-    printf("Passed tests: %d\n", passed_tests);
+    printf("Tests: %d\n"
+           "Passed tests: %d\n", counter_tests, passed_tests);
 }
 
 void run_test(struct UnitTest* test, int* counter_tests, int* counter_passed_tests) 

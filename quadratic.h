@@ -8,6 +8,8 @@ enum RootsNum {
     INF_ROOTS
 }; 
 
+void main_solver();
+
 #endif
 
 
