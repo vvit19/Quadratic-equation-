@@ -7,15 +7,16 @@
 #include <cmath>
 #include <cassert>
 
-const int USER_PROGRAMMER = 1;
-const int USER_NOT_PROGRAMMER = 0;
+const int USER_PROGRAMMER = 2;
+const int USER_ASK_HELP = 1;
+const int REGULAR_USER = 0;
 
 int main(int argc, char** argv) 
 {
     if (check_input(argc, argv, HELP))
     {
         help_cmd();
-        return USER_PROGRAMMER;
+        return USER_ASK_HELP;
     }
 
     if (check_input(argc, argv, TEST))
@@ -25,8 +26,7 @@ int main(int argc, char** argv)
     }
 
     main_solver();
-    
-    return 0;
+    return REGULAR_USER;
 }
 
 void main_solver()
