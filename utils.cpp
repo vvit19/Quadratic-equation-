@@ -19,3 +19,31 @@ void clean_buffer() {
     while ((ch = getchar()) != '\n') 
         { }
 }
+
+int calc_file_size(FILE* file)
+{
+    fseek(file, 0, SEEK_END);
+    return ftell(file);
+}
+
+int read_file(FILE* file, char* buffer, int max_file_size)
+{
+    fseek(file, 0, SEEK_SET);
+    return fread(buffer, 1, max_file_size, file);
+}
+
+void calc_symb_line(int* symb_in_line, int file_size, char* buffer)
+{
+    symb_in_line[0] = 0;
+
+    for (int i = 0, j = 0; i < file_size; i++)
+    {
+        symb_in_line[j]++;
+
+        if (buffer[i] == '\n')
+        {
+            j++;
+            symb_in_line[j] = 0;
+        }
+    }
+}

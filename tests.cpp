@@ -5,7 +5,6 @@
 #include <cmath>
 #include <cassert>
 #include <cstdlib>
-#include <malloc.h>
 
 bool test_solve_quadratic(UnitTest* test);
 void run_test(UnitTest* test, int* counter_tests, int* counter_passed_tests);
@@ -14,68 +13,51 @@ void check_test_fail(double x1, double x2, double x1_expected, double x2_expecte
 bool is_roots_equal(double x1, double x2, double x1_expected, double x2_expected);
 bool is_test_correct(double x1, double x1_expected, double x2, double x2_expected, 
                      RootsNum roots, RootsNum roots_expected);
-void read_tests(double* array);
-int memory_count();
 
-const int LEN = 6; //struct length
-
-int memory_count() 
-{
-    double* array = (double*) malloc(sizeof(UnitTest));
-    FILE* file = fopen("text.txt", "r");
-    assert(file && "file not found");
-
-    int counter = 1;
-
-    for (int i = 0; fscanf(file, "%lf", &array[i]) != EOF; i++)
-    {
-        if ((i + 1) % LEN == 0)
-        {
-            array = (double*) realloc(array, ++counter * sizeof(UnitTest));
-        }
-    }
-
-    fclose(file);
-    free(array);
-
-    return counter;
-}
-
-void read_tests(double* array)
-{
-    assert(array);
-    FILE* file = fopen("text.txt", "r");
-    assert(file && "file not found");
-
-    for (int i = 0; fscanf(file, "%lf", &array[i]) != EOF; i++)
-        {   }
-
-    fclose(file);
-}
+const int test_size = 6; //amount of struct elements
 
 void run_all_tests() 
 {
-    int length = memory_count();
-    double* array = (double*) malloc(length * sizeof(UnitTest));
-    read_tests(array);
-    UnitTest* tests = (UnitTest*) malloc(length * sizeof(UnitTest));
-    
-    for (int i = 0, ind = -1; i < length; i++)
+    FILE* file = fopen("text.txt", "r");
+    assert(file && "file not found");
+
+    int max_file_size = calc_file_size(file);
+    UnitTest* tests = (UnitTest*) malloc(max_file_size * sizeof(UnitTest));
+    char* buffer = (char*) malloc(max_file_size * sizeof(char));
+
+    int file_size = read_file(file, buffer, max_file_size);
+    fclose(file);
+
+    int ntests = 1;
+    for (int i = 0; i < file_size; i++)
     {
-        tests[i].a = *(++ind + array);
-        tests[i].b = *(++ind + array);
-        tests[i].c = *(++ind + array);
-        tests[i].x1 = *(++ind + array);
-        tests[i].x2 = *(++ind + array);
-        tests[i].roots = (RootsNum) *(++ind + array);
+        if (buffer[i] == '\n' || buffer[i] == EOF)
+        {
+            ntests++;
+        }
     }
 
-    const int UNIT_TESTS_NUM = length - 1;
+    int* symb_in_line = (int*) malloc(ntests * sizeof(int));
+    calc_symb_line(symb_in_line, file_size, buffer);
+
+    int shift = 0;
+    for (int i = 0; i < ntests; i++)
+    {
+        sscanf((buffer + shift), "%lf %lf %lf %lf %lf %d",
+              &((tests + i)->a),
+              &((tests + i)->b),
+              &((tests + i)->c),
+              &((tests + i)->x1),
+              &((tests + i)->x2),
+              (int*)&((tests + i)->roots));
+
+        shift += symb_in_line[i];
+    }
 
     int counter_tests = 0;
     int passed_tests = 0;
 
-    for (int i = 0; i < UNIT_TESTS_NUM; i++) 
+    for (int i = 0; i < ntests; i++) 
     {
         UnitTest* test = &tests[i];
         run_test(test, &counter_tests, &passed_tests);
@@ -85,7 +67,8 @@ void run_all_tests()
            "Passed tests: %d\n", 
            counter_tests, passed_tests);
     free(tests);
-    free(array);
+    free(buffer);
+    free(symb_in_line);
 }
 
 void run_test(UnitTest* test, int* counter_tests, int* counter_passed_tests) 
@@ -114,6 +97,7 @@ bool test_solve_quadratic(UnitTest* test)
     double x1_expected = test->x1;
     double x2_expected = test->x2;
     RootsNum roots_expected = test->roots;
+    
     double x1 = 0;
     double x2 = 0;
     RootsNum roots = solve_quadratic(a, b, c, &x1, &x2);
@@ -124,7 +108,7 @@ bool test_solve_quadratic(UnitTest* test)
 bool is_test_correct(double x1, double x1_expected, double x2, double x2_expected, 
                      RootsNum roots, RootsNum roots_expected)
 {
-    if (is_roots_equal(x1, x2, x1_expected, x2_expected) && roots == roots_expected)
+    if (is_roots_equal(x1, x2, x1_expected, x2_expected) && (int) roots == (int) roots_expected)
     {
         return true;
     }
