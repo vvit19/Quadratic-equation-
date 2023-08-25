@@ -1,8 +1,3 @@
-#ifndef QUADRATIC_H_
-#include "quadratic.h"
-#define QUADRATIC_H_
-#endif
-
 #ifndef IO_H_
 #define IO_H_
 

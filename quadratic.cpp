@@ -1,35 +1,28 @@
-#include "quadratic.h"
 #include "tests.h"
 #include "solver.h"
 #include "io.h"
-#include "comm_line_arg.h"
+#include "cmd_arg.h"
 #include <cstdio>
-#include <cmath>
-#include <cassert>
 
-const int USER_PROGRAMMER = 2;
-const int USER_ASK_HELP = 1;
-const int REGULAR_USER = 0;
+enum UserStatus {
+    USER_SOLVE_Q,
+    USER_USE_CMD
+};
+
+void run_solver();
 
 int main(int argc, char** argv) 
 {
-    if (check_input(argc, argv, HELP))
+    if (check_input(argc, argv) )
     {
-        help_cmd();
-        return USER_ASK_HELP;
+        return USER_USE_CMD;
     }
-
-    if (check_input(argc, argv, TEST))
-    {
-        test_cmd();
-        return USER_PROGRAMMER;
-    }
-
-    main_solver();
-    return REGULAR_USER;
+    
+    run_solver();
+    return USER_SOLVE_Q;
 }
 
-void main_solver()
+void run_solver()
 {
     printf("I'll solve equation: ax^2 + bx + c = 0\n");
 

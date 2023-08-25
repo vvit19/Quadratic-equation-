@@ -1,6 +1,7 @@
 #include "utils.h"
 #include <cstdio>
 #include <cmath>
+#include <cassert>
 
 bool is_equal(double a, double b) 
 {

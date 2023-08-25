@@ -1,6 +1,6 @@
+#include "solver.h"
 #include "io.h"
 #include "utils.h"
-#include "quadratic.h"
 #include <cstdio>
 #include <cmath>
 #include <cassert>
@@ -12,8 +12,8 @@ void read_coeff(double* coeff, char ch)
     bool correct_input = false;
     printf("%c = ", ch);
 
-    while (correct_input != true) 
-    {
+    while (!correct_input) 
+    {   
         if (scanf("%lf", coeff) != 1) 
         {
             printf("Incorrect input! Input number once again!\n");
@@ -32,9 +32,9 @@ void read_coeff(double* coeff, char ch)
     }
 }
 
-void output_solutions(RootsNum Nroots, double x_1, double x_2) {
+void output_solutions(RootsNum nroots, double x_1, double x_2) {
     
-    switch (Nroots)
+    switch (nroots)
     {
     case ZERO_ROOTS:
         printf("no real solutions\n");

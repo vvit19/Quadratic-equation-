@@ -1,5 +1,4 @@
 #include "solver.h"
-#include "quadratic.h"
 #include "utils.h"
 #include <cstdio>
 #include <cmath>
@@ -15,21 +14,23 @@ RootsNum solve_quadratic(double a, double b, double c, double* x_1, double* x_2)
         return solve_linear(b, c, x_1);
     }
 
-    double discriminant = discriminant_calculation(a, b, c);
+    double discr = b * b - 4 * a * c;
 
-    if (discriminant < 0) 
+    if (discr < 0) 
     {
         return ZERO_ROOTS;
     }
 
-    *x_1 = (- b + sqrt(discriminant)) / (2 * a);
-
-    if (is_zero(discriminant)) 
+    if (is_zero(discr)) 
     {
+        *x_1 = - b / (2 * a);
         return ONE_ROOT;
     }
 
-    *x_2 = (- b - sqrt(discriminant)) / (2 * a);
+    double sqrt_d = sqrt(discr);
+
+    *x_1 = (- b + sqrt_d) / (2 * a);
+    *x_2 = (- b - sqrt_d) / (2 * a);
     return TWO_ROOTS;
 }
 
@@ -48,11 +49,6 @@ RootsNum solve_linear(double a, double b, double* x_1)
 
     *x_1 = - b / a;
     return ONE_ROOT;
-}
-
-double discriminant_calculation(double a, double b, double c) 
-{
-    return b * b - 4 * a * c;
 }
 
 
