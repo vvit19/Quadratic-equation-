@@ -3,23 +3,19 @@
 #include <cstdio>
 #include <cstring>
 
-void help_cmd();
-void test_cmd();
+void input_filename(FILE** file, char* filename);
 
-void help_cmd()
+int help_cmd()
 {
-    printf("Write %s to run unit tests\n"
-           "Write %s to learn about flags\n"
-           "Write nothing to solve equation", 
-           TEST_OPT, HELP_OPT);
+    printf("%s %s to run unit tests\n"
+           "%s to learn about flags\n"
+           "input nothing to solve equation", 
+           TEST_OPT, FILE_OPT, HELP_OPT);
+
+    return GIVE_INFO;
 }
 
-void test_cmd()
-{
-    run_all_tests();
-}
-
-bool check_input(int len, char** input)
+ProgrammMode check_input(int len, char** input, FILE** file)
 {
     for (int i = 1; i < len; i++) 
     {
@@ -29,16 +25,21 @@ bool check_input(int len, char** input)
 
         if (!strcmp(word, test_ptr))
         {
-            test_cmd();
-            return true;
+            input_filename(file, input[i + 1]);
+            return TESTS;
         }
 
         if (!strcmp(word, help_ptr))
         {
-            help_cmd();
-            return true;
+            return HELP;
         }
     }
-    return false;
+
+    return SOLVE;
+}
+
+void input_filename(FILE** file, char* filename)
+{
+    *file = fopen(filename, "r");
 }
 

@@ -1,0 +1,74 @@
+CFlAGS = -Wshadow -Winit-self -Wredundant-decls -Wcast-align -Wundef -Wfloat-equal -Winline\
+ -Wunreachable-code -Wmissing-declarations -Wmissing-include-dirs -Wswitch-enum -Wswitch-default\
+  -Weffc++ -Wmain -Wextra -Wall -g -pipe -fexceptions -Wcast-qual -Wconversion -Wctor-dtor-privacy\
+   -Wempty-body -Wformat-security -Wformat=2 -Wignored-qualifiers -Wlogical-op\
+    -Wno-missing-field-initializers -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith\
+	 -Wsign-promo -Wstack-usage=8192 -Wstrict-aliasing -Wstrict-null-sentinel -Wtype-limits\
+	  -Wwrite-strings -Werror=vla -D_DEBUG -D_EJUDGE_CLIENT_SIDE
+
+all:
+	g++ $(CFlAGS) quadratic.cpp tests.cpp io.cpp solver.cpp utils.cpp cmd_arg.cpp -o quadratic.exe
+
+TARGET = quadratic
+
+CFlAGS = -Wshadow -Winit-self -Wredundant-decls -Wcast-align -Wundef -Wfloat-equal -Winline\
+ -Wunreachable-code -Wmissing-declarations -Wmissing-include-dirs -Wswitch-enum -Wswitch-default\
+  -Weffc++ -Wmain -Wextra -Wall -g -pipe -fexceptions -Wcast-qual -Wconversion -Wctor-dtor-privacy\
+   -Wempty-body -Wformat-security -Wformat=2 -Wignored-qualifiers -Wlogical-op\
+    -Wno-missing-field-initializers -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith\
+	 -Wsign-promo -Wstack-usage=8192 -Wstrict-aliasing -Wstrict-null-sentinel -Wtype-limits\
+	  -Wwrite-strings -Werror=vla -D_DEBUG -D_EJUDGE_CLIENT_SIDE
+
+BUILD = g++ -c $^ $(CFlAGS)
+
+.PHONY: all
+all: $(TARGET)
+
+$(TARGET): quadratic.o solver.o tests.o utils.o cmd_arg.o
+	g++ $^ -o $(TARGET) $(CFlAGS)
+
+quadratic.o: quadratic.cpp
+	$(BUILD)
+
+solver.o: solver.cpp
+	$(BUILD)
+
+tests.o: tests.cpp
+	$(BUILD)
+
+utils.o: utils.cpp
+	$(BUILD)
+
+cmd_arg.o: cmd_arg.cpp
+	$(BUILD)
+
+.PHONY: clean
+clean:
+	rm -rf $(TARGET) *.o 
+
+all: quad
+
+quad: quadratic.o solver.o tests.o utils.o cmd_arg.o io.o
+	g++ quadratic.o solver.o tests.o utils.o cmd_arg.o -o quad
+
+quadratic.o: quadratic.cpp io.cpp 
+	g++ -c quadratic.cpp io.cpp
+
+solver.o: solver.cpp
+	g++ -c solver.cpp
+
+tests.o: tests.cpp
+	g++ -c tests.cpp
+
+utils.o: utils.cpp
+	g++ -c utils.cpp
+
+cmd_arg.o: cmd_arg.cpp
+	g++ -c cmd_arg.cpp
+
+io.o: io.cpp 
+	g++ -c io.cpp
+
+clean:
+	rm -rf quadratic *.o 
+

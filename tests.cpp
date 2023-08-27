@@ -13,37 +13,42 @@ void check_test_fail(double x1, double x2, double x1_expected, double x2_expecte
 bool is_roots_equal(double x1, double x2, double x1_expected, double x2_expected);
 bool is_test_correct(double x1, double x1_expected, double x2, double x2_expected, 
                      RootsNum roots, RootsNum roots_expected);
-
-const int test_size = 6; //amount of struct elements
-
-void run_all_tests() 
+                     
+int run_all_tests(FILE* file) 
 {
-    FILE* file = fopen("text.txt", "r");
-    assert(file && "file not found");
-
-    int max_file_size = calc_file_size(file);
-    UnitTest* tests = (UnitTest*) malloc(max_file_size * sizeof(UnitTest));
-    char* buffer = (char*) malloc(max_file_size * sizeof(char));
-
-    int file_size = read_file(file, buffer, max_file_size);
-    fclose(file);
-
-    int ntests = 1;
-    for (int i = 0; i < file_size; i++)
+    int max_file_size = get_file_size(file);
+    UnitTest* tests = (UnitTest*) calloc(max_file_size, sizeof(UnitTest));
+    if (is_nullptr(tests))
     {
-        if (buffer[i] == '\n' || buffer[i] == EOF)
-        {
-            ntests++;
-        }
+        return TESTS_ERROR;
     }
 
-    int* symb_in_line = (int*) malloc(ntests * sizeof(int));
-    calc_symb_line(symb_in_line, file_size, buffer);
+    char* buffer = (char*) calloc(max_file_size, sizeof(char));
+    if (is_nullptr(buffer))
+    {
+        free(tests);
+        return TESTS_ERROR;
+    }
 
+    int buffer_size = read_file(file, buffer, max_file_size);
+    fclose(file);
+
+    int ntests = calc_nlines(buffer, buffer_size);
+
+    int* symb_in_line = (int*) calloc(ntests, sizeof(int));
+    if (is_nullptr(symb_in_line))
+    {
+        free(tests);
+        free(buffer);
+        return TESTS_ERROR;
+    }
+    get_line_size(symb_in_line, buffer_size, buffer);
+    
     int shift = 0;
     for (int i = 0; i < ntests; i++)
     {
-        sscanf((buffer + shift), "%lf %lf %lf %lf %lf %d",
+        sscanf((buffer + shift), 
+              "%lf %lf %lf %lf %lf %d",
               &((tests + i)->a),
               &((tests + i)->b),
               &((tests + i)->c),
@@ -66,9 +71,11 @@ void run_all_tests()
     printf("Tests: %d\n"
            "Passed tests: %d\n", 
            counter_tests, passed_tests);
+           
     free(tests);
     free(buffer);
     free(symb_in_line);
+    return RUN_TESTS;
 }
 
 void run_test(UnitTest* test, int* counter_tests, int* counter_passed_tests) 
@@ -141,4 +148,3 @@ bool is_roots_equal(double x1, double x2, double x1_expected, double x2_expected
     return ((is_equal(x1, x1_expected) && is_equal(x2, x2_expected)) || 
             (is_equal(x2, x1_expected) && is_equal(x1, x2_expected)));
 }
-

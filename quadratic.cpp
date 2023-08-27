@@ -3,26 +3,38 @@
 #include "io.h"
 #include "cmd_arg.h"
 #include <cstdio>
+#include <cassert>
 
-enum UserStatus {
-    USER_SOLVE_Q,
-    USER_USE_CMD
-};
-
-void run_solver();
+int runner(ProgrammMode mode, FILE* file);
+int run_solver();
 
 int main(int argc, char** argv) 
 {
-    if (check_input(argc, argv) )
-    {
-        return USER_USE_CMD;
-    }
-    
-    run_solver();
-    return USER_SOLVE_Q;
+    FILE* file = nullptr;
+    ProgrammMode mode = check_input(argc, argv, &file);
+    assert(file);
+    runner(mode, file);
 }
 
-void run_solver()
+int runner(ProgrammMode mode, FILE* file)
+{
+    switch (mode)
+    {
+    case TESTS:
+        return run_all_tests(file);
+        break;
+    case HELP:
+        return help_cmd();
+    case SOLVE:
+        return run_solver();
+        break;
+    default:
+        return -1;
+        break;
+    }
+}
+
+int run_solver()
 {
     printf("I'll solve equation: ax^2 + bx + c = 0\n");
 
@@ -38,6 +50,7 @@ void run_solver()
 
     RootsNum solve = solve_quadratic(a, b, c, &x_1, &x_2);
     output_solutions(solve, x_1, x_2);
+    return SOLVE_EQUATION;
 }
 
 

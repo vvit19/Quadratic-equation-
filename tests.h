@@ -1,5 +1,7 @@
 #ifndef TESTS_H_
 #define TESTS_H_
+
+#include <cstdio>
 #include "solver.h"
 
 struct UnitTest {
@@ -11,6 +13,6 @@ struct UnitTest {
     RootsNum roots;
 };
 
-void run_all_tests();
+int run_all_tests(FILE* file);
 
 #endif

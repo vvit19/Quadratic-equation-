@@ -20,7 +20,7 @@ void clean_buffer() {
         { }
 }
 
-int calc_file_size(FILE* file)
+int get_file_size(FILE* file)
 {
     fseek(file, 0, SEEK_END);
     return ftell(file);
@@ -29,10 +29,10 @@ int calc_file_size(FILE* file)
 int read_file(FILE* file, char* buffer, int max_file_size)
 {
     fseek(file, 0, SEEK_SET);
-    return fread(buffer, 1, max_file_size, file);
+    return fread(buffer, sizeof(char), max_file_size, file);
 }
 
-void calc_symb_line(int* symb_in_line, int file_size, char* buffer)
+void get_line_size(int* symb_in_line, int file_size, char* buffer)
 {
     symb_in_line[0] = 0;
 
@@ -46,4 +46,22 @@ void calc_symb_line(int* symb_in_line, int file_size, char* buffer)
             symb_in_line[j] = 0;
         }
     }
+}
+
+int calc_nlines(char* array, int array_size) 
+{
+    int nlines = 0;
+    for (int i = 0; i < array_size; i++)
+    {
+        if (array[i] == '\n')
+        {
+            nlines++;
+        }
+    }
+    return nlines;
+}
+
+bool is_nullptr(void* ptr)
+{
+    return (ptr == nullptr);
 }
