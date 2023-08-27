@@ -12,15 +12,15 @@ int main(int argc, char** argv)
 {
     FILE* file = nullptr;
     ProgrammMode mode = check_input(argc, argv, &file);
-    assert(file);
     runner(mode, file);
 }
 
 int runner(ProgrammMode mode, FILE* file)
-{
+{  
     switch (mode)
     {
     case TESTS:
+        assert(file);
         return run_all_tests(file);
         break;
     case HELP:

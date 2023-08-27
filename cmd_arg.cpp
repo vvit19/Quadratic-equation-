@@ -2,6 +2,7 @@
 #include "tests.h"
 #include <cstdio>
 #include <cstring>
+#include <cassert>
 
 void input_filename(FILE** file, char* filename);
 
@@ -17,6 +18,7 @@ int help_cmd()
 
 ProgrammMode check_input(int len, char** input, FILE** file)
 {
+    //no assert for file because it is nullptr for this time
     for (int i = 1; i < len; i++) 
     {
         char* word = input[i];
@@ -40,6 +42,7 @@ ProgrammMode check_input(int len, char** input, FILE** file)
 
 void input_filename(FILE** file, char* filename)
 {
+    //no assert for file because it is nullptr for this time
     *file = fopen(filename, "r");
 }
 

@@ -22,12 +22,17 @@ void clean_buffer() {
 
 int get_file_size(FILE* file)
 {
+    assert(file);
+
     fseek(file, 0, SEEK_END);
     return ftell(file);
 }
 
 int read_file(FILE* file, char* buffer, int max_file_size)
 {
+    assert(file);
+    assert(buffer);
+    
     fseek(file, 0, SEEK_SET);
     return fread(buffer, sizeof(char), max_file_size, file);
 }
