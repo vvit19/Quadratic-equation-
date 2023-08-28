@@ -2,7 +2,7 @@
 ## Description
 This program can solve any quadratic equation (very useful).
 ## Installation
-Clone repo and make:
+Clone the repo and make:
 ```
 git clone https://github.com/vvit19/quadratic_equation.git
 make

@@ -18,19 +18,28 @@ int main(int argc, char** argv)
 
 int runner(ProgramMode mode, char** argv)
 {  
+    assert(argv);
+
+    char* filename = argv[ARGC_TESTS - 1];
+
     switch (mode)
     {
     case TESTS_MODE:
-        return run_all_tests(argv[argc_tests - 1]);
+        run_all_tests(filename);
+        return 0;
+        
     case HELP_MODE:
         help_cmd();
         return 0;
+
     case SOLVE_MODE:
         run_solver();
         return 0;
+
     case INC_FLAG:
         printf("Incorrect flag input!\n");
         return -1;
+
     default:
         printf("This case is unknown\n");
         return -1;

@@ -5,7 +5,6 @@
 #include <cmath>
 #include <cassert>
 
-
 void run_solver()
 {
     printf("I'll solve equation: ax^2 + bx + c = 0\n");

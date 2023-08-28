@@ -18,11 +18,11 @@ enum ProgramMode {
 ProgramMode check_arg_cmd(int len, char **input);
 
 /// @brief Number of cmd arguments in solve mode
-const int argc_solver = 1;
+const int ARGC_SOLVER = 1;
 /// @brief Number of cmd arguments in help mode
-const int argc_help = 2;
+const int ARGC_HELP = 2;
 /// @brief Number of cmd arguments in tests mode
-const int argc_tests = 3;
+const int ARGC_TESTS = 3;
 
 /// @brief Prints info (in help mode)
 void help_cmd();

@@ -8,20 +8,19 @@
 const char HELP_OPT[] = "--help"; 
 /// @brief Flag for TEST mode
 const char TEST_OPT[] = "--test";
-/// @brief Example of file name
-const char FILE_OPT[] = "filename.txt";
 
 void help_cmd()
 {
-    printf("%s %s to run unit tests\n"
+    printf("%s filename.txt to run unit tests\n"
            "%s to learn about flags\n"
            "input nothing to solve equation", 
-           TEST_OPT, FILE_OPT, HELP_OPT);
+           TEST_OPT, HELP_OPT);
 }
 
 ProgramMode check_arg_cmd(int len, char** input)
 {
-    //no assert for file because it is nullptr for this time
+    assert(input);
+
     for (int i = 1; i < len; i++) 
     {
         char* word = input[i];
@@ -30,7 +29,7 @@ ProgramMode check_arg_cmd(int len, char** input)
 
         if (!strcmp(word, test_ptr))
         {
-            if (len > argc_tests)
+            if (len > ARGC_TESTS)
             {
                 return INC_FLAG;
             }
@@ -39,7 +38,7 @@ ProgramMode check_arg_cmd(int len, char** input)
 
         if (!strcmp(word, help_ptr))
         {
-            if (len > argc_help)
+            if (len > ARGC_HELP)
             {
                 return INC_FLAG;
             }
@@ -47,7 +46,7 @@ ProgramMode check_arg_cmd(int len, char** input)
         }
     }
 
-    if (len > argc_solver)
+    if (len > ARGC_SOLVER)
     {
         return INC_FLAG;
     }

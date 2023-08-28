@@ -34,11 +34,14 @@ int get_file_size(FILE* file)
 
 int read_file(FILE* file, char* buffer, int max_file_size)
 {
+    assert(max_file_size > 0);
     assert(file);
     assert(buffer);
     
     fseek(file, 0, SEEK_SET);
-    return fread(buffer, sizeof(char), max_file_size, file);
+    int file_size = fread(buffer, sizeof(char), max_file_size, file);
+
+    return file_size;
 }
 
 int calc_nlines(char* array, int array_size) 
@@ -56,46 +59,53 @@ int calc_nlines(char* array, int array_size)
     return nlines;
 }
 
-FILE* read_filename(char* filename)
+int calc_file_nlines(char* filename)
 {
     assert(filename);
+
     FILE* file = fopen(filename, "r");
-    return file;
-}
-
-int get_file_nlines(char* filename)
-{
-    assert(filename);
-    FILE* file = read_filename(filename);
     assert(file);
-    int nlines = get_text_nlines(file);
-    fclose(file);
-    return nlines;
-}
 
-int get_text_nlines(FILE* file)
-{
-    assert(file);
-    char* buffer = fill_buffer(file);
+    char* buffer = get_file_content(file);
+    if (buffer == nullptr)
+    {
+        return -1;
+    }
+
     int buffer_size = get_buffer_size(file, buffer);
-    int text_lines = calc_nlines(buffer, buffer_size);
+    int nlines = calc_nlines(buffer, buffer_size);
+
     free(buffer);
-    return text_lines;
+    fclose(file);
+
+    return nlines;
 }
 
 int get_buffer_size(FILE* file, char* buffer)
 {
+    assert(file);
+    assert(buffer);
+
     int max_file_size = get_file_size(file);
     int buffer_size = read_file(file, buffer, max_file_size);
+    
     return buffer_size;
 }
 
-char* fill_buffer(FILE* file)
+char* get_file_content(FILE* file)
 {
+    assert(file);
+
     int max_file_size = get_file_size(file);
+    
     char* buffer = (char*) calloc(max_file_size, sizeof(char));
-    assert(buffer);
+    if (buffer == nullptr)
+    {
+        return nullptr;
+    }
+
     read_file(file, buffer, max_file_size);
+
     return buffer;
 }
 
@@ -103,11 +113,15 @@ int* get_lines_sizes(int ntests, FILE* file, char* buffer)
 {
     assert(file);
     assert(buffer);
-    int buffer_size = get_buffer_size(file, buffer);
-    int* lines_sizes = (int*) calloc(ntests, sizeof(int));
-    assert(lines_sizes);
 
-    lines_sizes[0] = 0;
+    int buffer_size = get_buffer_size(file, buffer);
+
+    int* lines_sizes = (int*) calloc(ntests, sizeof(int));
+    if (lines_sizes == nullptr)
+    {
+        return nullptr;
+    }
+
     for (int i = 0, j = 0; i < buffer_size; i++)
     {
         lines_sizes[j]++;
@@ -115,7 +129,6 @@ int* get_lines_sizes(int ntests, FILE* file, char* buffer)
         if (buffer[i] == '\n')
         {
             j++;
-            lines_sizes[j] = 0;
         }
     }
 

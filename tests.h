@@ -4,11 +4,6 @@
 #include <cstdio>
 #include "solver.h"
 
-enum Tests_Result {
-    TESTS_OK = 0, ///<Tests runned successfully
-    TESTS_ERROR = 1 ///<Tests runned with an error
-};
-
 /// @brief Unit tests structure (what they are consists of)
 struct UnitTest {
     double a;
@@ -20,8 +15,7 @@ struct UnitTest {
 };
 
 /// @brief Runs tests
-/// @param file File with tests
-/// @return If tests passed or not
-Tests_Result run_all_tests(char* filename);
+/// @param filename Name of file with tests
+int run_all_tests(char* filename);
 
 #endif

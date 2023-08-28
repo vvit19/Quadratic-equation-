@@ -32,14 +32,17 @@ void launch_tests(UnitTest* tests, int ntests, int* counter_tests, int* passed_t
 /// @param tests Array of tests
 /// @param ntests Number of tests
 /// @param filename Name of file
-void fill_tests(UnitTest** tests, int ntests, char* filename);
+UnitTest* fill_tests(int ntests, char* filename);
 
-Tests_Result run_all_tests(char* filename)
+int run_all_tests(char* filename)
 {
-    int ntests = get_file_nlines(filename);
+    assert(filename);
 
-    UnitTest* tests = (UnitTest*) calloc(ntests, sizeof(UnitTest));
-    fill_tests(&tests, ntests, filename);
+    int ntests = calc_file_nlines(filename);
+    assert(ntests > 0);
+
+    UnitTest* tests = fill_tests(ntests, filename);
+    assert(tests);
 
     int counter_tests = 0;
     int passed_tests = 0;
@@ -51,7 +54,7 @@ Tests_Result run_all_tests(char* filename)
            counter_tests, passed_tests);   
                  
     free(tests);
-    return TESTS_OK;
+    return 0;
 }
 
 void run_test(UnitTest* test, int* counter_tests, int* counter_passed_tests) 
@@ -106,6 +109,7 @@ void print_test_fail(double x1, double x2, double x1_expected, double x2_expecte
                      RootsNum roots, RootsNum roots_expected)
 {
     printf("Test failed\n");
+
     if (!is_equal(x1, x1_expected))
     {
         printf("x1 = %f != x1_expected = %f\n", x1, x1_expected);
@@ -130,35 +134,64 @@ bool is_roots_equal(double x1, double x2, double x1_expected, double x2_expected
 
 void launch_tests(UnitTest* tests, int ntests, int* counter_tests, int* passed_tests)
 {
+    assert(tests);
+    assert(counter_tests);
+    assert(passed_tests);
+
     for (int i = 0; i < ntests; i++) 
     {
         run_test(tests + i, counter_tests, passed_tests);
     }
 }
 
-void fill_tests(UnitTest** tests, int ntests, char* filename)
+UnitTest* fill_tests(int ntests, char* filename)
 {
-    FILE* file = read_filename(filename);
-    assert(file);
-    char* buffer = fill_buffer(file);
+    assert(filename);
+
+    UnitTest* tests = (UnitTest*) calloc(ntests, sizeof(UnitTest));
+    assert(tests);
+
+    FILE* file = fopen(filename, "r");
+    if (file == nullptr)
+    {
+        return nullptr;
+    }
+
+    char* buffer = get_file_content(file);
+    if (buffer == nullptr)
+    {
+        fclose(file);
+        free(tests);
+        return nullptr;
+    }
+
     int* lines_sizes = get_lines_sizes(ntests, file, buffer);
+    if (lines_sizes == nullptr)
+    {
+        fclose(file);
+        free(tests);
+        free(buffer);
+        return nullptr;
+    }
 
     int shift = 0;
     for (int i = 0; i < ntests; i++)
     {
         sscanf((buffer + shift), 
               "%lf %lf %lf %lf %lf %d",
-              &((*tests + i)->a),
-              &((*tests + i)->b),
-              &((*tests + i)->c),
-              &((*tests + i)->x1),
-              &((*tests + i)->x2),
-              (int*)&((*tests + i)->roots));
+              &((tests + i)->a),
+              &((tests + i)->b),
+              &((tests + i)->c),
+              &((tests + i)->x1),
+              &((tests + i)->x2),
+              (int*)&((tests + i)->roots));
 
         shift += lines_sizes[i];
     }
 
     fclose(file);
+    free(tests);
     free(buffer);
-    free(lines_sizes);
+
+    return tests;
 }
