@@ -1,5 +1,6 @@
 .vscode
-Makefile
-Makefile1
 *.exe
 *.o
+html
+latex
+Doxyfile

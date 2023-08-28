@@ -12,6 +12,7 @@ git clone https://github.com/vvit19/quadratic_equation.git
 make
 ```
 Then input coefficients values (program will tell you where and when you should do it)
+
 Ready.
 ### You need help to learn the features of the program
 ```

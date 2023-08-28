@@ -65,8 +65,3 @@ int calc_nlines(char* array, int array_size)
     }
     return nlines;
 }
-
-bool is_nullptr(void* ptr)
-{
-    return (ptr == nullptr);
-}

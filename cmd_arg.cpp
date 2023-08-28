@@ -4,19 +4,25 @@
 #include <cstring>
 #include <cassert>
 
+/// @brief flag for HELP mode
+const char HELP_OPT[] = "--help"; 
+/// @brief flag for TEST mode
+const char TEST_OPT[] = "--test";
+/// @brief example of file name
+const char FILE_OPT[] = "filename.txt";
+
+/// @brief assign pointer to filename.txt to *file
 void input_filename(FILE** file, char* filename);
 
-int help_cmd()
+void help_cmd()
 {
     printf("%s %s to run unit tests\n"
            "%s to learn about flags\n"
            "input nothing to solve equation", 
            TEST_OPT, FILE_OPT, HELP_OPT);
-
-    return GIVE_INFO;
 }
 
-ProgrammMode check_input(int len, char** input, FILE** file)
+ProgramMode check_input(int len, char** input, FILE** file)
 {
     //no assert for file because it is nullptr for this time
     for (int i = 1; i < len; i++) 

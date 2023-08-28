@@ -5,52 +5,35 @@
 #include <cstdio>
 #include <cassert>
 
-int runner(ProgrammMode mode, FILE* file);
-int run_solver();
+/// @brief function thats runs programm depending on chosen mode
+/// @return 0 - if program worked correctly, 1 - if incorrectly
+int runner(ProgramMode mode, FILE* file);
 
 int main(int argc, char** argv) 
 {
     FILE* file = nullptr;
-    ProgrammMode mode = check_input(argc, argv, &file);
-    runner(mode, file);
+    ProgramMode mode = check_input(argc, argv, &file);
+    return runner(mode, file);
 }
 
-int runner(ProgrammMode mode, FILE* file)
+int runner(ProgramMode mode, FILE* file)
 {  
     switch (mode)
     {
     case TESTS:
         assert(file);
         return run_all_tests(file);
-        break;
     case HELP:
-        return help_cmd();
+        help_cmd();
+        return 0;
     case SOLVE:
-        return run_solver();
-        break;
+        run_solver();
+        return 0;
     default:
+        printf("This case is unknown\n");
         return -1;
-        break;
     }
 }
 
-int run_solver()
-{
-    printf("I'll solve equation: ax^2 + bx + c = 0\n");
-
-    double a = 0; 
-    double b = 0;
-    double c = 0;
-    double x_1 = 0;
-    double x_2 = 0;
-
-    read_coeff(&a, 'a'); 
-    read_coeff(&b, 'b');
-    read_coeff(&c, 'c');
-
-    RootsNum solve = solve_quadratic(a, b, c, &x_1, &x_2);
-    output_solutions(solve, x_1, x_2);
-    return SOLVE_EQUATION;
-}
 
 

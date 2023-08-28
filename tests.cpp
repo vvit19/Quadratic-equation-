@@ -1,18 +1,32 @@
 #include "tests.h"
 #include "solver.h"
 #include "utils.h"
+#include "cmd_arg.h"
 #include <cstdio>
 #include <cmath>
 #include <cassert>
 #include <cstdlib>
 
+/// @brief solves quadratic equation with data from test
+/// @return if test is correct or not
 bool test_solve_quadratic(UnitTest* test);
+
+/// @brief runs test
 void run_test(UnitTest* test, int* counter_tests, int* counter_passed_tests);
+
+/// @brief finds where test failed and tells this info to us
 void where_test_fail(double x1, double x2, double x1_expected, double x2_expected, 
                      RootsNum roots, RootsNum roots_expected);
+
+/// @brief are roots written in tests equal to referenced roots
 bool is_roots_equal(double x1, double x2, double x1_expected, double x2_expected);
+
+/// @brief check if test is correct or not
 bool check_test_correct(double x1, double x1_expected, double x2, double x2_expected, 
                      RootsNum roots, RootsNum roots_expected);
+
+/// @brief function transfers data from file to program
+/// @return if function worked correct or not
 bool connect_file_test(UnitTest** tests, FILE* file, int* ntests);
                      
 int run_all_tests(FILE* file) 
@@ -39,7 +53,7 @@ int run_all_tests(FILE* file)
            counter_tests, passed_tests);
            
     free(tests);
-    return RUN_TESTS;
+    return TESTS_OK;
 }
 
 void run_test(UnitTest* test, int* counter_tests, int* counter_passed_tests) 
@@ -122,13 +136,13 @@ bool connect_file_test(UnitTest** tests, FILE* file, int* ntests)
     assert(file);
     int max_file_size = get_file_size(file);
     *tests = (UnitTest*) calloc(max_file_size, sizeof(UnitTest));
-    if (is_nullptr(*tests))
+    if (*tests == nullptr)
     {
         return false;
     }
 
     char* buffer = (char*) calloc(max_file_size, sizeof(char));
-    if (is_nullptr(buffer))
+    if (buffer == nullptr)
     {
         free(*tests);
         return false;
@@ -140,7 +154,7 @@ bool connect_file_test(UnitTest** tests, FILE* file, int* ntests)
     *ntests = calc_nlines(buffer, buffer_size);
 
     int* line_size = (int*) calloc(*ntests, sizeof(int));
-    if (is_nullptr(line_size))
+    if (line_size == nullptr)
     {
         free(*tests);
         free(buffer);
