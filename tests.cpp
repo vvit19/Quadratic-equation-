@@ -7,51 +7,49 @@
 #include <cassert>
 #include <cstdlib>
 
-/// @brief solves quadratic equation with data from test
-/// @return if test is correct or not
+/// @brief Solves quadratic equation with data from test
+/// @return If test is correct or not
 bool test_solve_quadratic(UnitTest* test);
 
-/// @brief runs test
+/// @brief Runs test
 void run_test(UnitTest* test, int* counter_tests, int* counter_passed_tests);
 
-/// @brief finds where test failed and tells this info to us
-void where_test_fail(double x1, double x2, double x1_expected, double x2_expected, 
+/// @brief Finds where test failed and tells this info to us
+void print_test_fail(double x1, double x2, double x1_expected, double x2_expected, 
                      RootsNum roots, RootsNum roots_expected);
 
-/// @brief are roots written in tests equal to referenced roots
+/// @brief Are roots written in tests equal to referenced roots
 bool is_roots_equal(double x1, double x2, double x1_expected, double x2_expected);
 
-/// @brief check if test is correct or not
+/// @brief Check if test is correct or not
 bool check_test_correct(double x1, double x1_expected, double x2, double x2_expected, 
                      RootsNum roots, RootsNum roots_expected);
 
-/// @brief function transfers data from file to program
-/// @return if function worked correct or not
-bool connect_file_test(UnitTest** tests, FILE* file, int* ntests);
-                     
-int run_all_tests(FILE* file) 
-{
-    assert(file);
+/// @brief Launches tests one by one
+void launch_tests(UnitTest* tests, int ntests, int* counter_tests, int* passed_tests);
 
-    UnitTest* tests = nullptr;
-    int ntests = 0;
-    if (!connect_file_test(&tests, file, &ntests))
-    {
-        return TESTS_ERROR;
-    }
+/// @brief Fills array of tests with file values
+/// @param tests Array of tests
+/// @param ntests Number of tests
+/// @param filename Name of file
+void fill_tests(UnitTest** tests, int ntests, char* filename);
+
+Tests_Result run_all_tests(char* filename)
+{
+    int ntests = get_file_nlines(filename);
+
+    UnitTest* tests = (UnitTest*) calloc(ntests, sizeof(UnitTest));
+    fill_tests(&tests, ntests, filename);
 
     int counter_tests = 0;
     int passed_tests = 0;
 
-    for (int i = 0; i < ntests; i++) 
-    {
-        run_test(&tests[i], &counter_tests, &passed_tests);
-    }
+    launch_tests(tests, ntests, &counter_tests, &passed_tests);
 
     printf("Tests: %d\n"
            "Passed tests: %d\n", 
-           counter_tests, passed_tests);
-           
+           counter_tests, passed_tests);   
+                 
     free(tests);
     return TESTS_OK;
 }
@@ -94,20 +92,20 @@ bool test_solve_quadratic(UnitTest* test)
 bool check_test_correct(double x1, double x1_expected, double x2, double x2_expected, 
                      RootsNum roots, RootsNum roots_expected)
 {
-    if (is_roots_equal(x1, x2, x1_expected, x2_expected) && (int) roots == (int) roots_expected)
+    if (is_roots_equal(x1, x2, x1_expected, x2_expected) && roots == roots_expected)
     {
         printf("All right\n");
         return true;
     }
 
-    printf("Test failed\n");
-    where_test_fail(x1, x2, x1_expected, x2_expected, roots, roots_expected);
+    print_test_fail(x1, x2, x1_expected, x2_expected, roots, roots_expected);
     return false;
 }
 
-void where_test_fail(double x1, double x2, double x1_expected, double x2_expected, 
+void print_test_fail(double x1, double x2, double x1_expected, double x2_expected, 
                      RootsNum roots, RootsNum roots_expected)
 {
+    printf("Test failed\n");
     if (!is_equal(x1, x1_expected))
     {
         printf("x1 = %f != x1_expected = %f\n", x1, x1_expected);
@@ -130,40 +128,23 @@ bool is_roots_equal(double x1, double x2, double x1_expected, double x2_expected
             (is_equal(x2, x1_expected) && is_equal(x1, x2_expected)));
 }
 
-bool connect_file_test(UnitTest** tests, FILE* file, int* ntests)
+void launch_tests(UnitTest* tests, int ntests, int* counter_tests, int* passed_tests)
 {
-    //no assert for tests and ntests because they are nullptr for this time
+    for (int i = 0; i < ntests; i++) 
+    {
+        run_test(tests + i, counter_tests, passed_tests);
+    }
+}
+
+void fill_tests(UnitTest** tests, int ntests, char* filename)
+{
+    FILE* file = read_filename(filename);
     assert(file);
-    int max_file_size = get_file_size(file);
-    *tests = (UnitTest*) calloc(max_file_size, sizeof(UnitTest));
-    if (*tests == nullptr)
-    {
-        return false;
-    }
+    char* buffer = fill_buffer(file);
+    int* lines_sizes = get_lines_sizes(ntests, file, buffer);
 
-    char* buffer = (char*) calloc(max_file_size, sizeof(char));
-    if (buffer == nullptr)
-    {
-        free(*tests);
-        return false;
-    }
-
-    int buffer_size = read_file(file, buffer, max_file_size);
-    fclose(file);
-
-    *ntests = calc_nlines(buffer, buffer_size);
-
-    int* line_size = (int*) calloc(*ntests, sizeof(int));
-    if (line_size == nullptr)
-    {
-        free(*tests);
-        free(buffer);
-        return false;
-    }
-    get_line_size(line_size, buffer_size, buffer);
-    
     int shift = 0;
-    for (int i = 0; i < *ntests; i++)
+    for (int i = 0; i < ntests; i++)
     {
         sscanf((buffer + shift), 
               "%lf %lf %lf %lf %lf %d",
@@ -174,10 +155,10 @@ bool connect_file_test(UnitTest** tests, FILE* file, int* ntests)
               &((*tests + i)->x2),
               (int*)&((*tests + i)->roots));
 
-        shift += line_size[i];
+        shift += lines_sizes[i];
     }
 
+    fclose(file);
     free(buffer);
-    free(line_size);
-    return true;
+    free(lines_sizes);
 }

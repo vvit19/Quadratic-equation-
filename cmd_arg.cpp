@@ -4,15 +4,12 @@
 #include <cstring>
 #include <cassert>
 
-/// @brief flag for HELP mode
+/// @brief Flag for HELP mode
 const char HELP_OPT[] = "--help"; 
-/// @brief flag for TEST mode
+/// @brief Flag for TEST mode
 const char TEST_OPT[] = "--test";
-/// @brief example of file name
+/// @brief Example of file name
 const char FILE_OPT[] = "filename.txt";
-
-/// @brief assign pointer to filename.txt to *file
-void input_filename(FILE** file, char* filename);
 
 void help_cmd()
 {
@@ -22,7 +19,7 @@ void help_cmd()
            TEST_OPT, FILE_OPT, HELP_OPT);
 }
 
-ProgramMode check_input(int len, char** input, FILE** file)
+ProgramMode check_arg_cmd(int len, char** input)
 {
     //no assert for file because it is nullptr for this time
     for (int i = 1; i < len; i++) 
@@ -33,22 +30,28 @@ ProgramMode check_input(int len, char** input, FILE** file)
 
         if (!strcmp(word, test_ptr))
         {
-            input_filename(file, input[i + 1]);
-            return TESTS;
+            if (len > argc_tests)
+            {
+                return INC_FLAG;
+            }
+            return TESTS_MODE;
         }
 
         if (!strcmp(word, help_ptr))
         {
-            return HELP;
+            if (len > argc_help)
+            {
+                return INC_FLAG;
+            }
+            return HELP_MODE;
         }
     }
 
-    return SOLVE;
-}
+    if (len > argc_solver)
+    {
+        return INC_FLAG;
+    }
 
-void input_filename(FILE** file, char* filename)
-{
-    //no assert for file because it is nullptr for this time
-    *file = fopen(filename, "r");
+    return SOLVE_MODE;
 }
 

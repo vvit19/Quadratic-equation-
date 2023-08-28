@@ -3,15 +3,15 @@
 
 #include "solver.h"
 
-/// @brief reads equation coefficient
-/// @param coeff pointer to coefficient
-/// @param ch symbol, denoting coefficient
+/// @brief Reads equation coefficient
+/// @param coeff Pointer to coefficient
+/// @param ch Symbol, denoting coefficient
 void read_coeff(double* coeff, char ch);
 
-/// @brief outputs equation solutions
-/// @param roots amount of roots
-/// @param x_1 first root 
-/// @param x_2 second root
+/// @brief Outputs equation solutions
+/// @param roots Amount of roots
+/// @param x_1 First root 
+/// @param x_2 Second root
 void output_solutions(RootsNum roots, double x_1, double x_2);
 
 #endif

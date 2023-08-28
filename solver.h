@@ -1,7 +1,7 @@
 #ifndef SOLVER_H_
 #define SOLVER_H_
 
-/// @brief number of roots
+/// @brief Number of roots
 enum RootsNum {
     ZERO_ROOTS = 0,
     ONE_ROOT   = 1,
@@ -9,23 +9,23 @@ enum RootsNum {
     INF_ROOTS  = 3
 }; 
 
-/// @brief solves quadratic equaton (ax^2 + bx + c = 0)
-/// @param a coefficient a
-/// @param b coefficient b
-/// @param c coefficient c
-/// @param x_1 first root 
-/// @param x_2 second root
-/// @return number of equation roots
+/// @brief Solves quadratic equaton (ax^2 + bx + c = 0)
+/// @param a Coefficient a
+/// @param b Coefficient b
+/// @param c Coefficient c
+/// @param x_1 First root 
+/// @param x_2 Second root
+/// @return Number of equation roots
 RootsNum solve_quadratic(double a, double b, double c, double* x_1, double* x_2);
 
-/// @brief solves linear equation (ax + b = 0)
-/// @param a coefficient a
-/// @param b coefficient b
-/// @param x_1 equation root
-/// @return number of equation roots
+/// @brief Solves linear equation (ax + b = 0)
+/// @param a Coefficient a
+/// @param b Coefficient b
+/// @param x_1 Equation root
+/// @return Number of equation roots
 RootsNum solve_linear(double a, double b, double* x_1);
 
-/// @brief runs program in SOLVE mode
+/// @brief Runs program in SOLVE mode
 void run_solver();
 
 #endif

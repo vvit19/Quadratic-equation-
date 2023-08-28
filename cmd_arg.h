@@ -3,22 +3,28 @@
 
 #include <cstdio>
 
-/// @brief definition of enum that holds program modes
+/// @brief Definition of enum that holds program modes
 enum ProgramMode {
-    TESTS, ///<if user wants to run tests
-    SOLVE, ///<if user wants to solve equation 
-    HELP   ///<if user needs help 
+    TESTS_MODE, ///<If user wants to run tests
+    SOLVE_MODE, ///<If user wants to solve equation 
+    HELP_MODE,  ///<If user needs help 
+    INC_FLAG    ///<If user inputs incorrect flag
 };
 
-/// @brief check, what user've input in cmd to choose program mode
-/// @param len amount of inputed words
-/// @param input array of inputed words
-/// @param file pointer to file (for tests)
-/// @return program mode
-ProgramMode check_input(int len, char **input, FILE** file);
+/// @brief Check, what user've input in cmd to choose program mode
+/// @param len Amount of inputed words
+/// @param input Array of inputed words
+/// @return Program mode
+ProgramMode check_arg_cmd(int len, char **input);
 
-/// @brief prints info (in help mode)
-/// @return result of program implementation (GIVE_INFO)
+/// @brief Number of cmd arguments in solve mode
+const int argc_solver = 1;
+/// @brief Number of cmd arguments in help mode
+const int argc_help = 2;
+/// @brief Number of cmd arguments in tests mode
+const int argc_tests = 3;
+
+/// @brief Prints info (in help mode)
 void help_cmd();
 
 #endif
