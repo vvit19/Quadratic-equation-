@@ -6,10 +6,10 @@
 /// @brief Unit tests structure (what they are consists of)
 struct UnitTest {
     double a;       ///< Coefficient a
-    double b;       ///< Coefficient a
-    double c;       ///< Coefficient a
-    double x1;      ///< Coefficient a
-    double x2;      ///< Coefficient a
+    double b;       ///< Coefficient b
+    double c;       ///< Coefficient c
+    double x1;      ///< First root
+    double x2;      ///< Second root
     RootsNum roots; ///< Number of roots
 };
 
