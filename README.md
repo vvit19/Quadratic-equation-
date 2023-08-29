@@ -12,7 +12,7 @@ make
 ```
 .\quadratic.exe
 ```
-### You need help to learn the features of the program
+### You want to know about the features of the program
 ```
 .\quadratic.exe --help
 ``` 
