@@ -3,10 +3,10 @@
 
 /// @brief Number of roots
 enum RootsNum {
-    ZERO_ROOTS = 0,
-    ONE_ROOT   = 1,
-    TWO_ROOTS  = 2,
-    INF_ROOTS  = 3
+    ZERO_ROOTS = 0, ///< 0 roots
+    ONE_ROOT   = 1, ///< 1 root
+    TWO_ROOTS  = 2, ///< 2 roots
+    INF_ROOTS  = 3  ///< Infinity roots
 }; 
 
 /// @brief Solves quadratic equaton (ax^2 + bx + c = 0)

@@ -45,13 +45,14 @@ void output_solutions(RootsNum nroots, double x_1, double x_2) {
     case TWO_ROOTS:
         printf("x_1 = %.3f\n"
                "x_2 = %.3f\n", 
-               x_1, x_2);
+               x_1, 
+               x_2);
         break;
     case INF_ROOTS:
         printf("(-oo, +oo)\n");
         break;
     default:
-        assert(0 && "Unknown number of roots.\n");
+        assert(!"Unknown number of roots.\n");
         break;
     }
 }

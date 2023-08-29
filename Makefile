@@ -13,10 +13,10 @@ COMPILE = g++ -c $^ $(CFlAGS)
 .PHONY: all
 all: $(TARGET)
 
-$(TARGET): quadratic.o solver.o tests.o utils.o cmd_arg.o io.o
+$(TARGET): main.o solver.o tests.o utils.o cmd_arg.o io.o
 	g++ $^ -o $(TARGET) $(CFlAGS)
 
-quadratic.o: quadratic.cpp 
+main.o: main.cpp 
 	$(COMPILE)
 
 solver.o: solver.cpp

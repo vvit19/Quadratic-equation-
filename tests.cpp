@@ -7,76 +7,88 @@
 #include <cassert>
 #include <cstdlib>
 
-/// @brief Solves quadratic equation with data from test
-/// @return If test is correct or not
-bool test_solve_quadratic(UnitTest* test);
-
-/// @brief Runs test
-void run_test(UnitTest* test, int* counter_tests, int* counter_passed_tests);
+/// @brief Run unit test
+/// @param test Pointer to test structure
+/// @param tests_count Counter of tests
+/// @param passed_tests_count Counter of passed tests 
+static void run_test(UnitTest* test, int* tests_count, int* passed_tests_count);
 
 /// @brief Finds where test failed and tells this info to us
-void print_test_fail(double x1, double x2, double x1_expected, double x2_expected, 
+/// @param x1 First root received from program
+/// @param x2 Second root received from program
+/// @param x1_expected First root received from file with tests
+/// @param x2_expected Second root received from file with tests
+/// @param roots Number of roots recieved from program
+/// @param roots_expected Number of roots recieved from file with tests
+static void print_test_fail(double x1, double x2, double x1_expected, double x2_expected, 
                      RootsNum roots, RootsNum roots_expected);
+
+/// @brief Creates array of tests and fills it with data from file with tests
+/// @param ntests Number of tests
+/// @param file Pointer to file with tests
+/// @return Pointer to array with tests
+static UnitTest* read_file_tests(int ntests, FILE* file);
 
 /// @brief Are roots written in tests equal to referenced roots
-bool is_roots_equal(double x1, double x2, double x1_expected, double x2_expected);
+/// @param x1 First root received from program
+/// @param x2 Second root received from program
+/// @param x1_expected First root received from file with tests
+/// @param x2_expected Second root received from file with tests
+/// @return If they are equal or not
+static bool is_roots_equal(double x1, double x2, double x1_expected, double x2_expected);
 
-/// @brief Check if test is correct or not
-bool check_test_correct(double x1, double x1_expected, double x2, double x2_expected, 
-                     RootsNum roots, RootsNum roots_expected);
-
-/// @brief Launches tests one by one
-void launch_tests(UnitTest* tests, int ntests, int* counter_tests, int* passed_tests);
-
-/// @brief Fills array of tests with file values
-/// @param tests Array of tests
-/// @param ntests Number of tests
-/// @param filename Name of file
-UnitTest* fill_tests(int ntests, char* filename);
+/// @brief This enum holds tests errors
+enum ERRORS {
+    FILE_NOT_FOUND   = -2, ///<If file haven't been founded
+    MEM_ALLOC_ERROR = -1,  ///<If OS didn't give memory (when calloc returns nullptr)
+}; 
 
 int run_all_tests(char* filename)
 {
     assert(filename);
 
-    int ntests = calc_file_nlines(filename);
-    assert(ntests > 0);
+    FILE* file = fopen(filename, "r");  
+    if (file == nullptr)
+    {
+        return FILE_NOT_FOUND;
+    }
 
-    UnitTest* tests = fill_tests(ntests, filename);
-    assert(tests);
+    int ntests = calc_file_nlines(file);
+    if (ntests < 0)
+    {
+        return MEM_ALLOC_ERROR;
+    }
 
-    int counter_tests = 0;
+    UnitTest* tests = read_file_tests(ntests, file);
+    if (tests == nullptr)
+    {
+        return MEM_ALLOC_ERROR;
+    }
+
+    int tests_count = 0;
     int passed_tests = 0;
-
-    launch_tests(tests, ntests, &counter_tests, &passed_tests);
+    for (int i = 0; i < ntests; i++) 
+    {
+        run_test(tests + i, &tests_count, &passed_tests);
+    }
 
     printf("Tests: %d\n"
            "Passed tests: %d\n", 
-           counter_tests, passed_tests);   
+           tests_count, 
+           passed_tests);   
                  
     free(tests);
     return 0;
 }
 
-void run_test(UnitTest* test, int* counter_tests, int* counter_passed_tests) 
+static void run_test(UnitTest* test, int* tests_count, int* passed_tests_count) 
 {
     assert(test);
-    assert(counter_tests);
-    assert(counter_passed_tests);
+    assert(tests_count);
+    assert(passed_tests_count);
 
-    *counter_tests += 1;
-    printf("%d) ", *counter_tests);
-
-    bool correct_test = test_solve_quadratic(test);
-
-    if (correct_test) 
-    { 
-        *counter_passed_tests += 1; 
-    }
-}
-
-bool test_solve_quadratic(UnitTest* test) 
-{
-    assert(test);
+    *tests_count += 1;
+    printf("%d) ", *tests_count);
 
     double a = test->a;
     double b = test->b;
@@ -84,28 +96,23 @@ bool test_solve_quadratic(UnitTest* test)
     double x1_expected = test->x1;
     double x2_expected = test->x2;
     RootsNum roots_expected = test->roots;
-    
+
     double x1 = 0;
     double x2 = 0;
     RootsNum roots = solve_quadratic(a, b, c, &x1, &x2);
-
-    return check_test_correct(x1, x1_expected, x2, x2_expected, roots, roots_expected);
-}
-
-bool check_test_correct(double x1, double x1_expected, double x2, double x2_expected, 
-                     RootsNum roots, RootsNum roots_expected)
-{
+//оставил без сорта из-за проблемы при одном корне, тогда делать так быстрее
     if (is_roots_equal(x1, x2, x1_expected, x2_expected) && roots == roots_expected)
     {
         printf("All right\n");
-        return true;
+        *passed_tests_count += 1;
     }
-
-    print_test_fail(x1, x2, x1_expected, x2_expected, roots, roots_expected);
-    return false;
+    else
+    {
+        print_test_fail(x1, x2, x1_expected, x2_expected, roots, roots_expected);
+    }
 }
 
-void print_test_fail(double x1, double x2, double x1_expected, double x2_expected, 
+static void print_test_fail(double x1, double x2, double x1_expected, double x2_expected, 
                      RootsNum roots, RootsNum roots_expected)
 {
     printf("Test failed\n");
@@ -126,51 +133,23 @@ void print_test_fail(double x1, double x2, double x1_expected, double x2_expecte
     }
 }
 
-bool is_roots_equal(double x1, double x2, double x1_expected, double x2_expected) 
+static UnitTest* read_file_tests(int ntests, FILE* file)
 {
-    return ((is_equal(x1, x1_expected) && is_equal(x2, x2_expected)) || 
-            (is_equal(x2, x1_expected) && is_equal(x1, x2_expected)));
-}
-
-void launch_tests(UnitTest* tests, int ntests, int* counter_tests, int* passed_tests)
-{
-    assert(tests);
-    assert(counter_tests);
-    assert(passed_tests);
-
-    for (int i = 0; i < ntests; i++) 
-    {
-        run_test(tests + i, counter_tests, passed_tests);
-    }
-}
-
-UnitTest* fill_tests(int ntests, char* filename)
-{
-    assert(filename);
+    assert(file);
 
     UnitTest* tests = (UnitTest*) calloc(ntests, sizeof(UnitTest));
-    assert(tests);
-
-    FILE* file = fopen(filename, "r");
-    if (file == nullptr)
+    if (tests == nullptr)
     {
         return nullptr;
     }
 
-    char* buffer = get_file_content(file);
+    int buffer_size = 0;
+    char* buffer = get_file_content(file, &buffer_size);
+
     if (buffer == nullptr)
     {
         fclose(file);
         free(tests);
-        return nullptr;
-    }
-
-    int* lines_sizes = get_lines_sizes(ntests, file, buffer);
-    if (lines_sizes == nullptr)
-    {
-        fclose(file);
-        free(tests);
-        free(buffer);
         return nullptr;
     }
 
@@ -179,19 +158,26 @@ UnitTest* fill_tests(int ntests, char* filename)
     {
         sscanf((buffer + shift), 
               "%lf %lf %lf %lf %lf %d",
-              &((tests + i)->a),
-              &((tests + i)->b),
-              &((tests + i)->c),
-              &((tests + i)->x1),
-              &((tests + i)->x2),
-              (int*)&((tests + i)->roots));
+              &(tests[i].a),
+              &(tests[i].b),
+              &(tests[i].c),
+              &(tests[i].x1),
+              &(tests[i].x2),
+              (int*)&(tests[i].roots));
 
-        shift += lines_sizes[i];
+        shift++;
+        while (buffer[shift] != '\n')
+        {
+            shift++;
+        }
     }
 
-    fclose(file);
-    free(tests);
     free(buffer);
-
     return tests;
+}
+
+static bool is_roots_equal(double x1, double x2, double x1_expected, double x2_expected) 
+{
+    return ((is_equal(x1, x1_expected) && is_equal(x2, x2_expected)) || 
+            (is_equal(x2, x1_expected) && is_equal(x1, x2_expected)));
 }

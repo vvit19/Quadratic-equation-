@@ -6,8 +6,8 @@
 #include <cassert>
 
 /// @brief Function thats runs programm depending on chosen mode
-/// @return 0 - if program worked correctly, -1 - if incorrectly
-int runner(ProgramMode mode, char** argv);
+/// @return 0 - if program worked correctly, otherwise - if incorrectly
+static int runner(ProgramMode mode, char** argv);
 
 int main(int argc, char** argv) 
 {
@@ -16,7 +16,7 @@ int main(int argc, char** argv)
     return exit_code;
 }
 
-int runner(ProgramMode mode, char** argv)
+static int runner(ProgramMode mode, char** argv)
 {  
     assert(argv);
 
@@ -24,24 +24,28 @@ int runner(ProgramMode mode, char** argv)
 
     switch (mode)
     {
-    case TESTS_MODE:
-        run_all_tests(filename);
-        return 0;
-        
-    case HELP_MODE:
+    case TESTS_MODE: {
+        int res_tests = run_all_tests(filename); 
+        return res_tests;
+    }     
+
+    case HELP_MODE: 
         help_cmd();
         return 0;
 
-    case SOLVE_MODE:
+    case SOLVE_MODE: 
         run_solver();
         return 0;
 
-    case INC_FLAG:
+    case ERROR_FLAG: 
         printf("Incorrect flag input!\n");
         return -1;
-
+       
     default:
-        printf("This case is unknown\n");
+        printf("Default case reached in file: " 
+               __FILE__
+               "\nIn line: %d", 
+               __LINE__);
         return -1;
     }
 }

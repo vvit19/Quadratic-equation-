@@ -4,51 +4,45 @@
 #include <cstring>
 #include <cassert>
 
-/// @brief Flag for HELP mode
-const char HELP_OPT[] = "--help"; 
-/// @brief Flag for TEST mode
-const char TEST_OPT[] = "--test";
-
 void help_cmd()
 {
-    printf("%s filename.txt to run unit tests\n"
-           "%s to learn about flags\n"
-           "input nothing to solve equation", 
-           TEST_OPT, HELP_OPT);
+    printf("--test filename.txt to run unit tests\n"
+           "--help to learn about flags\n"
+           "input nothing to solve equation");
 }
 
-ProgramMode check_arg_cmd(int len, char** input)
+ProgramMode check_arg_cmd(int num_of_args, char** input)
 {
     assert(input);
 
-    for (int i = 1; i < len; i++) 
+    for (int i = 1; i < num_of_args; i++) 
     {
         char* word = input[i];
-        const char* test_ptr = TEST_OPT;
-        const char* help_ptr = HELP_OPT;
+        const char HELP_OPT[] = "--help"; 
+        const char TEST_OPT[] = "--test";
 
-        if (!strcmp(word, test_ptr))
+        if (!strcmp(word, TEST_OPT))
         {
-            if (len > ARGC_TESTS)
+            if (num_of_args > ARGC_TESTS)
             {
-                return INC_FLAG;
+                return ERROR_FLAG;
             }
             return TESTS_MODE;
         }
 
-        if (!strcmp(word, help_ptr))
+        if (!strcmp(word, HELP_OPT))
         {
-            if (len > ARGC_HELP)
+            if (num_of_args > ARGC_HELP)
             {
-                return INC_FLAG;
+                return ERROR_FLAG;
             }
             return HELP_MODE;
         }
     }
 
-    if (len > ARGC_SOLVER)
+    if (num_of_args > ARGC_SOLVER)
     {
-        return INC_FLAG;
+        return ERROR_FLAG;
     }
 
     return SOLVE_MODE;
