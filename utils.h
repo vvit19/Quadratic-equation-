@@ -6,12 +6,12 @@
 /// @brief Are real numbers equal
 /// @param a First number
 /// @param b Second number
-/// @return If a = b or not
+/// @return True, if numbers are equal; false, if if they are not equal
 bool is_equal(double a, double b);
 
 /// @brief Is real number = 0
 /// @param a Number
-/// @return If number = 0 or not
+/// @return True, if a = 0; false, if a != 0
 bool is_zero(double a);
 
 /// @brief Cleans stdin buffer

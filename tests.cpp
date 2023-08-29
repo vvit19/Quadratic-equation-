@@ -39,7 +39,7 @@ static bool is_roots_equal(double x1, double x2, double x1_expected, double x2_e
 
 /// @brief This enum holds tests errors
 enum ERRORS {
-    FILE_NOT_FOUND   = -2, ///<If file haven't been founded
+    FILE_NOT_FOUND  = -2, ///<If file haven't been founded
     MEM_ALLOC_ERROR = -1,  ///<If OS didn't give memory (when calloc returns nullptr)
 }; 
 
@@ -56,10 +56,13 @@ int run_all_tests(char* filename)
     int ntests = calc_file_nlines(file);
     if (ntests < 0)
     {
+        fclose(file);
         return MEM_ALLOC_ERROR;
     }
 
     UnitTest* tests = read_file_tests(ntests, file);
+    fclose(file);
+
     if (tests == nullptr)
     {
         return MEM_ALLOC_ERROR;
@@ -100,7 +103,7 @@ static void run_test(UnitTest* test, int* tests_count, int* passed_tests_count)
     double x1 = 0;
     double x2 = 0;
     RootsNum roots = solve_quadratic(a, b, c, &x1, &x2);
-//оставил без сорта из-за проблемы при одном корне, тогда делать так быстрее
+//оставил без сорта из-за проблемы при одном корне, делать так быстрее
     if (is_roots_equal(x1, x2, x1_expected, x2_expected) && roots == roots_expected)
     {
         printf("All right\n");
@@ -113,7 +116,7 @@ static void run_test(UnitTest* test, int* tests_count, int* passed_tests_count)
 }
 
 static void print_test_fail(double x1, double x2, double x1_expected, double x2_expected, 
-                     RootsNum roots, RootsNum roots_expected)
+                            RootsNum roots, RootsNum roots_expected)
 {
     printf("Test failed\n");
 
@@ -148,7 +151,6 @@ static UnitTest* read_file_tests(int ntests, FILE* file)
 
     if (buffer == nullptr)
     {
-        fclose(file);
         free(tests);
         return nullptr;
     }
@@ -158,12 +160,12 @@ static UnitTest* read_file_tests(int ntests, FILE* file)
     {
         sscanf((buffer + shift), 
               "%lf %lf %lf %lf %lf %d",
-              &(tests[i].a),
-              &(tests[i].b),
-              &(tests[i].c),
-              &(tests[i].x1),
-              &(tests[i].x2),
-              (int*)&(tests[i].roots));
+              &tests[i].a,
+              &tests[i].b,
+              &tests[i].c,
+              &tests[i].x1,
+              &tests[i].x2,
+              (int*)&tests[i].roots);
 
         shift++;
         while (buffer[shift] != '\n')

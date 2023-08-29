@@ -6,7 +6,7 @@
 #include <cassert>
 
 /// @brief Function thats runs programm depending on chosen mode
-/// @return 0 - if program worked correctly, otherwise - if incorrectly
+/// @return 0 - if program worked correctly, error code - if incorrectly
 static int runner(ProgramMode mode, char** argv);
 
 int main(int argc, char** argv) 
