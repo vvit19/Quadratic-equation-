@@ -11,13 +11,13 @@ void help_cmd()
            "input nothing to solve equation");
 }
 
-ProgramMode check_arg_cmd(int num_of_args, char** input)
+ProgramMode check_arg_cmd(int num_of_args, const char** input)
 {
     assert(input);
 
     for (int i = 1; i < num_of_args; i++) 
     {
-        char* word = input[i];
+        const char* word = input[i];
         const char HELP_OPT[] = "--help"; 
         const char TEST_OPT[] = "--test";
 

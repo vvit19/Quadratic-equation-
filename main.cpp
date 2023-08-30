@@ -7,20 +7,11 @@
 
 /// @brief Function thats runs programm depending on chosen mode
 /// @return 0 - if program worked correctly, error code - if incorrectly
-static int runner(ProgramMode mode, char** argv);
 
-int main(int argc, char** argv) 
+int main(int argc, const char** argv) 
 {
-    ProgramMode mode = check_arg_cmd(argc, argv);
-    int exit_code = runner(mode, argv);
-    return exit_code;
-}
-
-static int runner(ProgramMode mode, char** argv)
-{  
-    assert(argv);
-
-    char* filename = argv[ARGC_TESTS - 1];
+    ProgramMode mode = check_arg_cmd(argc, argv);    
+    const char* filename = argv[ARGC_TESTS - 1];
 
     switch (mode)
     {
@@ -47,8 +38,5 @@ static int runner(ProgramMode mode, char** argv)
                "\nIn line: %d", 
                __LINE__);
         return -1;
-    }
+    }    
 }
-
-
-

@@ -66,7 +66,15 @@ RootsNum solve_linear(double a, double b, double* x_1)
         return ZERO_ROOTS;
     }
 
-    *x_1 = - b / a;
+    if (is_zero(b))
+    {
+        *x_1 = 0;
+    }
+    else 
+    {
+        *x_1 = - b / a;
+    }
+    
     return ONE_ROOT;
 }
 

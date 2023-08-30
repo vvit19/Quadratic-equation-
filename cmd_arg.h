@@ -13,7 +13,7 @@ enum ProgramMode {
 /// @param num_of_args Amount of inputed words
 /// @param input Array of inputed words
 /// @return Program mode
-ProgramMode check_arg_cmd(int num_of_args, char **input);
+ProgramMode check_arg_cmd(int num_of_args, const char **input);
 
 /// @brief Number of cmd arguments in solve mode
 const int ARGC_SOLVER = 1;

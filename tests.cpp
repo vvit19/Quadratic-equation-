@@ -43,7 +43,7 @@ enum ERRORS {
     MEM_ALLOC_ERROR = -1,  ///<If OS didn't give memory (when calloc returns nullptr)
 }; 
 
-int run_all_tests(char* filename)
+int run_all_tests(const char* filename)
 {
     assert(filename);
 
@@ -103,7 +103,7 @@ static void run_test(UnitTest* test, int* tests_count, int* passed_tests_count)
     double x1 = 0;
     double x2 = 0;
     RootsNum roots = solve_quadratic(a, b, c, &x1, &x2);
-//оставил без сорта из-за проблемы при одном корне, делать так быстрее
+    
     if (is_roots_equal(x1, x2, x1_expected, x2_expected) && roots == roots_expected)
     {
         printf("All right\n");

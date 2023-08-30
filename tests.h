@@ -16,6 +16,6 @@ struct UnitTest {
 /// @brief Runs tests
 /// @param filename Name of file with tests
 /// @return 0, if tests've runned correctly, exit_code - if incorrectly 
-int run_all_tests(char* filename);
+int run_all_tests(const char* filename);
 
 #endif
